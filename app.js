@@ -5,6 +5,8 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
+io.origins(['https://chat.onlinesoppa.me:443']);
+
 const users = [];
 let messageId = 0;
 let time = new Date();
@@ -51,5 +53,5 @@ io.on('connection', function(socket) {
     });
 });
 
-server.listen(3000);
+server.listen(8300);
 console.log('Listentning to 3000');
