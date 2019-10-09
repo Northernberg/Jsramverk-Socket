@@ -6,6 +6,7 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
 io.origins(['https://chat.onlinesoppa.me:443']);
+io.set('origins', '*:*');
 
 const users = [];
 let messageId = 0;
@@ -54,4 +55,4 @@ io.on('connection', function(socket) {
 });
 
 server.listen(8300);
-console.log('Listentning to 3000');
+console.log('Listentning to 8300');
