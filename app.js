@@ -10,22 +10,28 @@ io.set('origins', '*:*');
 
 const users = [];
 let messageId = 0;
-let time = new Date();
 io.on('connection', function(socket) {
     console.info('User Connected');
     socket.on('set nickname', function(nickname) {
+        let time = new Date();
         socket.nickname = nickname;
         users.push(nickname);
         console.info('Logged in as ' + socket.nickname);
         socket.emit('set nickname', socket.nickname);
         io.emit('broadcast', {
             id: ++messageId,
-            time: time.getHours() + ':' + time.getMinutes(),
+            time:
+                (time.getHours() < 10
+                    ? '0' + time.getHours()
+                    : time.getHours()) +
+                ':' +
+                (time.getMinutes() < 10
+                    ? '0' + time.getMinutes()
+                    : time.getMinutes()),
             user: 'System',
             message: socket.nickname + ' Connected.',
         });
-        console.log(users);
-        // io.emit('get users', users);
+        io.emit('get users', users);
     });
     socket.on('chat message', function(message) {
         ++messageId;
@@ -36,7 +42,9 @@ io.on('connection', function(socket) {
             user: socket.nickname,
             message: message,
             time:
-                time.getHours() +
+                (time.getHours() < 10
+                    ? '0' + time.getHours()
+                    : time.getHours()) +
                 ':' +
                 (time.getMinutes() < 10
                     ? '0' + time.getMinutes()
@@ -46,6 +54,7 @@ io.on('connection', function(socket) {
     socket.on('get users', function() {
         console.info('get users');
         socket.emit('get users', users);
+        console.log(users);
     });
     socket.on('disconnect', function() {
         console.info('Client disconnected');
