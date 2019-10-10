@@ -60,6 +60,7 @@ io.on('connection', function(socket) {
         console.info('Client disconnected');
         var index = users.indexOf(socket.nickname);
         users.splice(index, 1);
+        io.emit('get users', users);
     });
 });
 
