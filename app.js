@@ -12,22 +12,14 @@ const users = [];
 let messageId = 0;
 io.on('connection', function(socket) {
     console.info('User Connected');
-    socket.on('set nickname', function(nickname) {
-        let time = new Date();
-        socket.nickname = nickname;
-        users.push(nickname);
+    socket.on('set nickname', function(res) {
+        socket.nickname = res.nick;
+        users.push(res.nick);
         console.info('Logged in as ' + socket.nickname);
         socket.emit('set nickname', socket.nickname);
         const broadcast = {
             id: ++messageId,
-            time:
-                (time.getHours() < 10
-                    ? '0' + time.getHours()
-                    : time.getHours()) +
-                ':' +
-                (time.getMinutes() < 10
-                    ? '0' + time.getMinutes()
-                    : time.getMinutes()),
+            time: res.date,
             user: 'System',
             message: socket.nickname + ' Connected.',
         };
@@ -35,22 +27,14 @@ io.on('connection', function(socket) {
         socket.emit('save broadcast', broadcast);
         io.emit('get users', users);
     });
-    socket.on('chat message', function(message) {
+    socket.on('chat message', function(res) {
         ++messageId;
-        let time = new Date();
-        console.info('Message recieved:', message);
+        console.info('Message recieved:', res.message);
         const formatted_msg = {
             id: messageId,
             user: socket.nickname,
-            message: message,
-            time:
-                (time.getHours() < 10
-                    ? '0' + time.getHours()
-                    : time.getHours()) +
-                ':' +
-                (time.getMinutes() < 10
-                    ? '0' + time.getMinutes()
-                    : time.getMinutes()),
+            message: res.message,
+            time: res.date,
         };
         socket.emit('chat message', formatted_msg);
         io.emit('all chat', formatted_msg);
