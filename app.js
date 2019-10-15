@@ -18,7 +18,7 @@ io.on('connection', function(socket) {
         users.push(nickname);
         console.info('Logged in as ' + socket.nickname);
         socket.emit('set nickname', socket.nickname);
-        io.emit('broadcast', {
+        const broadcast = {
             id: ++messageId,
             time:
                 (time.getHours() < 10
@@ -30,14 +30,16 @@ io.on('connection', function(socket) {
                     : time.getMinutes()),
             user: 'System',
             message: socket.nickname + ' Connected.',
-        });
+        };
+        io.emit('broadcast', broadcast);
+        socket.emit('save broadcast', broadcast);
         io.emit('get users', users);
     });
     socket.on('chat message', function(message) {
         ++messageId;
         let time = new Date();
         console.info('Message recieved:', message);
-        io.emit('chat message', {
+        const formatted_msg = {
             id: messageId,
             user: socket.nickname,
             message: message,
@@ -49,7 +51,9 @@ io.on('connection', function(socket) {
                 (time.getMinutes() < 10
                     ? '0' + time.getMinutes()
                     : time.getMinutes()),
-        });
+        };
+        socket.emit('chat message', formatted_msg);
+        io.emit('all chat', formatted_msg);
     });
     socket.on('get users', function() {
         console.info('get users');
