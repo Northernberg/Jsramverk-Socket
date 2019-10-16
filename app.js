@@ -9,7 +9,6 @@ io.origins(['https://chat.onlinesoppa.me:443']);
 io.set('origins', '*:*');
 
 const users = [];
-let messageId = 0;
 io.on('connection', function(socket) {
     console.info('User Connected');
     socket.on('set nickname', function(res) {
@@ -18,7 +17,6 @@ io.on('connection', function(socket) {
         console.info('Logged in as ' + socket.nickname);
         socket.emit('set nickname', socket.nickname);
         const broadcast = {
-            id: ++messageId,
             time: res.date,
             user: 'System',
             message: socket.nickname + ' Connected.',
@@ -28,10 +26,8 @@ io.on('connection', function(socket) {
         io.emit('get users', users);
     });
     socket.on('chat message', function(res) {
-        ++messageId;
         console.info('Message recieved:', res.message);
         const formatted_msg = {
-            id: messageId,
             user: socket.nickname,
             message: res.message,
             time: res.date,
