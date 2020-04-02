@@ -1,7 +1,7 @@
 # Setup
 
 ## Clone repo
-`git clone https://github.com/Northernberg/JsRamverkProj-Backend.git`
+`git clone https://github.com/Northernberg/Jsramverk-Socket.git`
 ## Install dependencies
 `npm install`
 ## Start socket server
