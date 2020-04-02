@@ -1,5 +1,8 @@
 # Setup
-## Install dependencie
+
+## Clone repo
+`git clone https://github.com/Northernberg/JsRamverkProj-Backend.git`
+## Install dependencies
 `npm install`
 ## Start socket server
 `node app.js`
